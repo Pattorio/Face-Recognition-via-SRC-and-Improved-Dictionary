@@ -3,7 +3,7 @@ path_root = 'CroppedYale/yaleB';
 % original size
 img_height = 192; 
 img_width = 168;
-img_size = [img_height, img_width];
+img_size = [img_height/3, img_width/3];  % downsampling
 
 % image vector size
 img_resize = img_height * img_width;
@@ -29,6 +29,10 @@ for f = 1:13
         path_curr_img = strcat(folder_img, '/', files(i).name);
         temp = imread(path_curr_img);
         img = imresize(imread(path_curr_img), img_size);
+        
+        % downsample
+        img = img(1:3:end,1:3:end);
+        
         % imshow(img);
         img_vector = reshape(img,img_resize,[]);
         % imshow(reshape(img_vector,img_size));
