@@ -19,7 +19,7 @@ function [isvalid,X_hat,norm1_delta,SCI] = isValid(x_hat,K)
     
     SCI = (K*(delta_x/norm1_x)-1)/(K-1);
     
-    tau = 0.4;
+    tau = 0.2;
     if SCI>=tau
         isvalid = true;
     else
