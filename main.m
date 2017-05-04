@@ -5,6 +5,8 @@ disp('Load imaged successfully!');
 downsample_size = img_size./3;
 
 trA = im2double(trA);
+%tempTeA = teA(:,2:3);
+%teA = im2double(tempTeA);
 teA = im2double(teA);
 
 num_tr = size(trA, 2);
