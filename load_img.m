@@ -3,13 +3,15 @@ path_root = 'CroppedYale/yaleB';
 % original size
 img_height = 192; 
 img_width = 168;
-img_size = [img_height/3, img_width/3];  % downsampling
+img_size = [img_height, img_width];  
 
 % image vector size
-img_resize = img_height * img_width;
+img_resize = img_height * img_width/9;  % downsampling
 
 index_tr = 1;
 index_te = 1;
+tr_index = [];
+te_index = [];
 
 tr_set1 = {'A+000E+00'; 'A-010E+00'; 'A+010E+00'; 'A-005E+10'; 'A+005E+10'; 'A-005E-10'; 'A+005E-10'};
 
@@ -40,10 +42,12 @@ for f = 1:13
         if ismember(img_name, tr_set1) || ismember(img_name, tr_set2)
             trA(:,index_tr) = img_vector;
             index_tr = index_tr + 1;
+            tr_index = [tr_index,f];
         elseif ismember(img_name, te_set1)
             teA(:,index_te) = img_vector;
             % imshow(reshape(teA(:,index_te),img_size));
             index_te = index_te + 1;
+            te_index = [te_index,f];
         end
     end
 end
