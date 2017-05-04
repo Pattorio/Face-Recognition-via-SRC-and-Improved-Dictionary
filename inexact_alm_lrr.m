@@ -76,7 +76,7 @@ while ~converged
     condition = max(max(max(abs(xmazme))),max(max(abs(zmj))));
     
     if (mod(iter,50) == 0) || (condition < tol)
-        disp('The number of iteration = ' num2str(iter));
+        disp(['The number of iteration = ' num2str(iter)]);
     end
     
     if iter == maxIter && condtition > tol
