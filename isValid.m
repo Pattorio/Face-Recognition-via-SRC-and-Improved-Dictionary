@@ -5,7 +5,7 @@ function isvalid = isValid(x,K)
 %         --- n - the number of training tokens per class
 % tau - threshold 
 
-    x_hat = l1(x);
+    x_hat = minimize_l1(x);
     %n = size(x,1);
     
     norm1_x = norm(x,1);
