@@ -56,7 +56,7 @@ while ~converged
         converged = true;
     end
     if iter == 1 || mod(iter,20)==0 || stopCriterion<tol
-        disp('iteration = ' num2str(iter) ',rank = ' num2str(rank(A_hat)));
+        disp(['iteration = ' num2str(iter) ',rank = ' num2str(rank(A_hat))]);
     end
     if ~converge && iter >= maxIter
         disp('Maximun iterations reached!');
