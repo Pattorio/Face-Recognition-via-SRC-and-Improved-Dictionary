@@ -1,4 +1,4 @@
-function [isvalid,X_hat,norm1_delta,SCI] = isValid(x_hat,K)
+function [isvalid,delta_x,SCI] = isValid(x_hat,K)
 % x_hat - n x 1 vector
 % K - the total number of in-set phase classes
 % m = K*n --- m = size(A,2)
