@@ -5,7 +5,9 @@ disp('Load imaged successfully!');
 downsample_size = img_size./3;
 
 trA = im2double(trA);
-%tempTeA = teA(:,2:3);
+%temp_te_index = sort([2,30,55,77]);%1,5,10,13
+%tempTeA = teA(:,temp_te_index);
+%te_index = te_index(:,temp_te_index);
 %teA = im2double(tempTeA);
 teA = im2double(teA);
 
@@ -50,14 +52,17 @@ disp('Finish LRR!');
 % SRC intitialization
 m_rpca = size(A_rpca,1);
 m_lrr = size(A_lrr,1);
+m_raw = size(trA,1);
 
 % B = [A,I];
 B_rpca = [A_rpca,eye(m_rpca)];
 B_lrr = [A_lrr,eye(m_lrr)];
+B_raw = [trA,eye(m_raw)];
 
 rho = 1.5;
 alpha_rpca = 1/sqrt(size(B_rpca, 1));
 alpha_lrr = 1/sqrt(size(B_lrr, 1));
+alpha_raw = 1/sqrt(size(B_raw,1));
 
 % ADMM for dictionary from RPCA
 for i = 1:num_te
@@ -66,7 +71,12 @@ end
 
 % ADMM for dictionary from LRR
 for i = 1:num_te
-    [w_lrr(:,i), history] = basis_pursuit(B_rpca, teA(:,i), rho, alpha_lrr);
+    [w_lrr(:,i), history] = basis_pursuit(B_lrr, teA(:,i), rho, alpha_lrr);
+end
+
+% ADMM for raw dictionary
+for i = 1:num_te
+    [w_raw(:,i), history] = basis_pursuit(B_raw, teA(:,i), rho, alpha_raw);
 end
 
 % w = [x;e]
@@ -76,9 +86,13 @@ e_rpca = w_rpca((num_tr+1):end,:);
 x_lrr = w_lrr(1:num_tr,:);
 e_lrr = w_lrr((num_tr+1):end,:);
 
+x_raw = w_raw(1:num_tr,:);
+e_raw = w_raw((num_tr+1):end,:);
+
 % recovery 
 Y_rpca = A_rpca * x_rpca;
 Y_lrr = A_lrr * x_lrr;
+Y_raw = trA * x_raw;
 
 
 %{
