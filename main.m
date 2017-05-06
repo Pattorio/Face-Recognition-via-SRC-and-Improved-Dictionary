@@ -28,16 +28,14 @@ end
 disp('Do RPCA for dictionary...');
 lambda_rpca = 1/sqrt(size(trA, 1));
 
-[A_rpca,E_rpca] = inexact_alm_rpca(trA,lambda_rpca);
-disp('Finish RPCA!');
-
-%{
-for i = 1:num_tr
-    temp_img = reshape(E_rpca(:,i),downsample_size);
-    image8Bit = uint8(255 * mat2gray(temp_img));
-    imshow(image8Bit);
+for i = 1:max(tr_index)
+    temp_rpca = find(tr_index == i);
+    [A_rpca(:,temp_rpca),E_rpca(:,temp_rpca)] = inexact_alm_rpca(trA(:,temp_rpca),lambda_rpca);
 end
-%}
+
+%[A_rpca,E_rpca,iter] = inexact_alm_rpca(trA,lambda_rpca);
+
+disp('Finish RPCA!');
 
 
 %{
@@ -55,9 +53,11 @@ A_lrr = trA * Z_lrr;
 disp('Finish LRR!');
 %}
 
+%{
+
 % SRC intitialization
 m_rpca = size(A_rpca,1);
-m = size(trA,1);
+%m = size(trA,1);
 
 % B = [A,I];
 B_rpca = [A_rpca,eye(m_rpca)];
@@ -67,32 +67,25 @@ B = [trA, eye(m)];
 rho = 1.5;
 alpha = lambda_rpca;
 
+
 % ADMM for dictionary from RPCA
 for i = 1:num_te
     [w_rpca(:,i), history_rpca] = basis_pursuit(B_rpca, teA(:,i), rho, alpha);
 end
-
+%{
 % ADMM for raw dictionary
 for i = 1:num_te
     [w(:,i),history] = basis_pursuit(B,teA(:,i),rho,alpha);
 end
-
+%}
 
 % w = [x;e]
-x = w(1:num_tr,:);
-e = w((num_tr+1):end,:);
+%e = w((num_tr+1):end,:);
 
 x_rpca = w_rpca(1:num_tr,:);
 e_rpca = w_rpca((num_tr+1):end,:);
 
 % recovery
 Y_rpca = A_rpca * x_rpca;
-Y = trA * x;
+%Y = trA * x;
 
-
-
-%{
-y = reshape(y,downsample_size);
-image8Bit = uint8(255 * mat2gray(y));
-imshow(image8Bit);
-%}
