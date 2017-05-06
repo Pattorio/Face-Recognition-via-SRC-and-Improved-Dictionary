@@ -12,6 +12,6 @@ position = randi(max_position,1,1);
 img(position:(position+m_noise-1), position:(position+n_noise-1)) = noise;
 new_img = img;
 
-image = uint8(255*mat2gray(new_img));
-imshow(new_img);
+%image = uint8(255*mat2gray(new_img));
+%imshow(new_img);
 end
