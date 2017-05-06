@@ -1,4 +1,4 @@
-function class = getClass(Y,W_hat,A)
+function class = getClass(Y,W_hat,A,tr_index)
 
 n = size(A,2);
 j = size(Y,2);
@@ -13,10 +13,12 @@ Y_r = Y - E_hat;
 K = 13;
 
 for a=1:j
-    [delta,delta_matrix]=getDelta(X_hat(:,a),K);
+    x_hat = X_hat(:,a);
+    y_r = Y_r(:,a);
+    [delta,delta_matrix]=getDelta(x_hat,K,tr_index);
     A_delta = A * delta_matrix;
     for k=1:K
-        r(k) = norm(Y_r(:,a) - A_delta(:,k),2);
+        r(k) = norm(y_r - A_delta(:,k),2);
     end
     [M, index] = min(r);
     class(a) = index;
