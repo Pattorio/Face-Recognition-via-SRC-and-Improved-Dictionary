@@ -4,14 +4,21 @@ path_root = 'CroppedYale/yaleB';
 img_height = 192; 
 img_width = 168;
 img_size = [img_height, img_width];  
+downsample_size = img_size./3;
 
 % image vector size
-img_resize = img_height * img_width/9;  % downsampling
+img_resize = img_height * img_width /9;  % downsampling
 
 index_tr = 1;
 index_te = 1;
 tr_index = [];
 te_index = [];
+
+tr_set1 = {'A+000E+00'; 'A-010E+00'; 'A+010E+00'; 'A-005E+10'; 'A+005E+10'; 'A-005E-10'; 'A+005E-10'};
+
+tr_set2 = {'A+000E-20'; 'A-010E-20'; 'A+020E-10'; 'A-025E+00'; 'A-015E+20'; 'A-020E-10'; 'A+000E+20'; 
+    'A+010E-20';'A+020E+10'; 'A+025E+00'; 'A+015E+20'; 'A-020E+10'};
+te_set1 = {'A-035E-20'; 'A-020E-40'; 'A-035E+40'; 'A-050E+00'; 'A+000E+45'; 'A+035E+15';};
     
 file_set = {'A-005E-10'; 'A-005E+10'; 'A-010E-20'; 'A-010E+00'; ...
         'A-015E+20'; 'A-020E-10'; 'A-020E-40'; 'A-020E+10'; ...
@@ -38,18 +45,25 @@ file_set = {'A-005E-10'; 'A-005E+10'; 'A-010E-20'; 'A-010E+00'; ...
         'A-110E+15'; 'A-110E+40'; 'A-110E+65'; 'A-120E+00'; ...
         'A-130E+20'; 'A+000E-20'; 'A+000E-35'; 'A+000E+00'; ...
         'A+000E+20'; 'A+000E+45'; 'A+000E+90'; };
-    testset1 = {'A+005E-10'; ...
+%{
+    testset = {'A+005E-10'; ...
         'A+005E+10'; 'A+010E-20'; 'A+010E+00'; 'A+015E+20'; ...
         'A+020E-10'; 'A+020E-40'; 'A+020E+10'; 'A+025E+00'; ...
-        'A+035E-20'; 'A+035E+15'; 'A+035E+40'; 'A+035E+65';}
-        
-    testset2 = {'A+050E-40'; 'A+050E+00'; 'A+060E-20'; 'A+060E+20'; ...
+        'A+035E-20'; 'A+035E+15'; 'A+035E+40'; 'A+035E+65'; ...
+        'A+050E-40'; 'A+050E+00'; 'A+060E-20'; 'A+060E+20'; ...
         'A+070E-35'; 'A+070E+00'; 'A+070E+45'; 'A+085E-20'; ...
-        'A+085E+20';}
-    testset3 = { 'A+095E+00'; 'A+110E-20'; 'A+110E+15'; ...
+        'A+085E+20'; 'A+095E+00'; 'A+110E-20'; 'A+110E+15'; ...
         'A+110E+40'; 'A+110E+65'; 'A+120E+00'; 'A+130E+20'; };
+%}
 
-
+    testset = {'A+005E-10'; ...
+        'A+015E+20'; ...
+        'A+020E-40'; ...
+        'A+035E+65'; ...
+        'A+050E+00'; ...
+        'A+070E-35'; ...
+        'A+085E+20'; 'A+110E+15'; ...
+        'A+120E+00'; };
 
 for f = 1:13
     folder_img = strcat(path_root, sprintf('%02d', f));
@@ -66,20 +80,20 @@ for f = 1:13
         % downsample
         img = img(1:3:end,1:3:end);
         
-        % imshow(img);
-        img_vector = reshape(img,img_resize,[]);
-        % imshow(reshape(img_vector,img_size));
         
         if ismember(img_name, trainset)
         %if ismember(img_name, tr_set1) || ismember(img_name, tr_set2)
+            % add noise part into dictionary
+            img = add_noise(img,downsample_size);
+            img_vector = reshape(img,img_resize,[]);
             trA(:,index_tr) = img_vector;
             index_tr = index_tr + 1;
             tr_index = [tr_index,f];
             sample_num = length(find(tr_index==1));
-        elseif ismember(img_name,testset1)
+        elseif ismember(img_name,testset)
         %elseif ismember(img_name, te_set1)
+            img_vector = reshape(img,img_resize,[]);    
             teA(:,index_te) = img_vector;
-            % imshow(reshape(teA(:,index_te),img_size));
             index_te = index_te + 1;
             te_index = [te_index,f];
         end
