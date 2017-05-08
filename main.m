@@ -1,11 +1,9 @@
 
 % load images and downsampling
 load_img;
+%load_AR_img;
+%load_noise_img;
 disp('Load imaged successfully!');
-downsample_size = img_size./3;
-
-trA = im2double(trA);
-teA = im2double(teA);
 
 num_tr = size(trA, 2);
 num_te = size(teA, 2);
@@ -38,31 +36,13 @@ end
 disp('Finish RPCA!');
 
 
-%{
-% LRR
-% min rank(Z) + lambda|E|_2,1 s.t X = AZ + E 
-% where Z is the low rank representataion of X
-% [Z,E] = inexact_alm_rpca(A,lambda) 
-% We can use A = X for reason that it is exactness to oueliers and
-% robustness to sample-sepcific corruptions
-disp('Do LRR for dictionary...');
-
-lambda_lrr = 1/sqrt(size(trA, 1));
-[Z_lrr,E_lrr] = LRR(trA,lambda_lrr);
-A_lrr = trA * Z_lrr;
-disp('Finish LRR!');
-%}
-
-%{
-
 % SRC intitialization
 m_rpca = size(A_rpca,1);
-%m = size(trA,1);
+m = size(trA,1);
 
 % B = [A,I];
 B_rpca = [A_rpca,eye(m_rpca)];
 B = [trA, eye(m)];
-
 
 rho = 1.5;
 alpha = lambda_rpca;
@@ -72,20 +52,27 @@ alpha = lambda_rpca;
 for i = 1:num_te
     [w_rpca(:,i), history_rpca] = basis_pursuit(B_rpca, teA(:,i), rho, alpha);
 end
-%{
+
 % ADMM for raw dictionary
 for i = 1:num_te
     [w(:,i),history] = basis_pursuit(B,teA(:,i),rho,alpha);
 end
-%}
+
 
 % w = [x;e]
-%e = w((num_tr+1):end,:);
-
 x_rpca = w_rpca(1:num_tr,:);
 e_rpca = w_rpca((num_tr+1):end,:);
 
+x = w(1:num_tr,:);
+e = w((num_tr+1):end,:);
+
 % recovery
 Y_rpca = A_rpca * x_rpca;
-%Y = trA * x;
+Y = trA * x;
+
+% classification
+class_raw = getClass(Y,w,trA,tr_index);
+class_rpca = getClass(Y_rpca,w_rpca,A_rpca,tr_index);
+ac_raw = accuracy(class_raw,te_index)
+ac_rpca = accuracy(class_rpca,te_index)
 
