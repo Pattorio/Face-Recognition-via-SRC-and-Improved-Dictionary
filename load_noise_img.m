@@ -54,7 +54,7 @@ file_set = {'A-005E-10'; 'A-005E+10'; 'A-010E-20'; 'A-010E+00'; ...
 
 
 
-for f = 1:13
+for f = 1:38
     folder_img = strcat(path_root, sprintf('%02d', f));
     path_img = fullfile(folder_img, '*.pgm');
     files = dir(path_img);
