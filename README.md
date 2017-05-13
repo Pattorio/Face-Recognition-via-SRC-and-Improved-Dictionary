@@ -11,7 +11,9 @@ Load images in AR databae. For each individual, we choose half of images that mi
 ### inexact_alm_rpca                      
 IALM to implement RPCA method.              
 Minming Chen, Arvind Ganesh                 
-Copyright: Perception and Decision Laboratory, University of Illinois, Urbana-Champaign, Microsoft Research Asia, Beijing
+Copyright: Perception and Decision Laboratory, University of Illinois, Urbana-Champaign, Microsoft Research Asia, Beijing           
+### inexact_alm_rpca_1             
+IALM for RPCA which is written by ourselves
 
 ### basis_pursuit                    
 ADMM to address l1-norm minimization problem.            
