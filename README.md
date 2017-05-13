@@ -1,7 +1,8 @@
 # Face Recognition via SRC and Improved Dictionary ELEN E6886          
 Yimeng Zhou (yz2993)               
-Qianwen Zheng (qz2271)
-
+Qianwen Zheng (qz2271)                
+Github: https://github.com/Pattorio/Face-Recognition-via-SRC-and-Improved-Dictionary                             
+                             
 ### load_img         
 Load images in Extended Yale B database. For each individual, we choose half of images that might span all lighting conditions  as our training set. And we split the rest of images into three set, testset1, testset2, and testset3.
 
